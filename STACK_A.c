@@ -2,23 +2,28 @@
 #define STACK_A
 
 #include <stdio.h>
-#define MAX 100
+#include <stdlib.h>
 
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
 
 typedef struct {
-    int top;
-    int items[MAX];
+    Node* top;
 } Stack;
 
+
 void initStack(Stack *s){
-    s->top = -1;
+    s->top = NULL;
 }
 
 int isEmpty(Stack *s){
     
     int checker = -1;
     
-    if(stack->top == -1){
+    if(s->top != NULL){
         checker = 0;
     }
     
@@ -37,7 +42,7 @@ int isFull(Stack *s){
 
 void push(Stack *s, int data){
     if(s->top < MAX - 1){
-        s->item[++s->top] = data;
+        s->items[++s->top] = data;
         s->top++;
     }
 }
@@ -51,7 +56,7 @@ void pop(Stack *s){
 
 int peek(Stack *s){
     
-    return (s->elem[s->top]);
+    return (s->items[s->top]);
     
 }
 
