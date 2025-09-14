@@ -2,94 +2,71 @@
 #define QUEUE_A
 
 #include <stdio.h>
-#define MAX 100   // Queue capacity
+#define MAX 100
 
-// Queue structure
 typedef struct {
     int items[MAX];
     int front;
     int rear;
 } Queue;
 
+void initQueue(Queue *q){
+    q->front = 0;
+    q->rear = -1;
+}
+
+int isEmptyQueue(Queue *q){
+    return (q->rear < q->front);
+}
+
+int isFullQueue(Queue *q){
+    return (q->rear - q->front + 1 == MAX);
+}
+
 void enqueue(Queue *q, int data){
-
-    int checker = 0;
-
-    if(checker == isFull(&q)){
+    if(!isFullQueue(q)){
         q->rear = (q->rear + 1) % MAX;
         q->items[q->rear] = data;
+    } else {
+        printf("Queue full.\n");
     }
-    else{
-        printf("This full");
-    }
-
 }
 
 void dequeue(Queue *q){
-    int checker = 0;
-
-    if(checker == isEmpty(&q)){
+    if(!isEmptyQueue(q)){
         q->front = (q->front + 1) % MAX;
+    } else {
+        printf("Queue empty.\n");
     }
-    else{
-        printf("Empty");
+}
+
+void enqueueUnique(Queue *q, int data){
+    int i = q->front;
+    while(i != (q->rear+1)%MAX){
+        if(q->items[i]==data){
+            printf("%d already exists.\n", data);
+            return;
+        }
+        i = (i+1)%MAX;
     }
+    enqueue(q, data);
 }
 
-int front(Queue *q){
-
-    return(q->items[q->front]);
-}
-
-int isEmpty(Queue *q){
-
-    int checker = 0;
-
-    if((q->rear + 2) % MAX == q->front){
-        checker = 1;
-    }
-
-    return checker;
-}
-
-int isFull(Queue *q){
-    int checker = 0;
-
-    if((q->rear + 1) % MAX == q->front){
-        checker = 1;
-    }
-
-    return checker;
-}
-
-void initQueue(Queue *q){
-
-    q->front = 0;
-    q->rear = MAX - 1;
-
-}
-
-void dequeueUnique(Queue *q, int data) {
-    Queue temp;
-    initQueue(&temp);
-
-    while (!isEmptyQueue(q)) {
+void dequeueUnique(Queue *q, int data){
+    Queue temp; initQueue(&temp);
+    while(!isEmptyQueue(q)){
         int val = q->items[q->front];
         dequeue(q);
-        if (val != data) {
-            enqueue(&temp, val);
-        }
+        if(val != data) enqueue(&temp, val);
     }
-
     *q = temp;
 }
 
-void displayQueue(Queue *q) {
+void displayQueue(Queue *q){
     printf("Queue: ");
-    for (int i = q->front; i <= q->rear; i++) {
+    for(int i=q->front; i<=q->rear; i++){
         printf("%d ", q->items[i]);
     }
     printf("\n");
 }
-
 #endif
