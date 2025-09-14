@@ -55,5 +55,33 @@ int peek(Stack *s){
     
 }
 
+void popUnique(Stack *s, int data) {
+    Stack temp;
+    initStack(&temp);
+
+
+    while (!isEmptyStack(s)) {
+        int val = peek(s);
+        pop(s);
+        if (val != data) {
+            push(&temp, val);
+        }
+    }
+
+
+    while (!isEmptyStack(&temp)) {
+        int val = peek(&temp);
+        pop(&temp);
+        push(s, val);
+    }
+}
+
+void displayStack(Stack *s) {
+    printf("Stack: ");
+    for (int i = 0; i <= s->top; i++) {
+        printf("%d ", s->items[i]);
+    }
+    printf("\n");
+}
 #endif
 

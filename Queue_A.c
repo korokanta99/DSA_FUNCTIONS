@@ -69,4 +69,27 @@ void initQueue(Queue *q){
 
 }
 
+void dequeueUnique(Queue *q, int data) {
+    Queue temp;
+    initQueue(&temp);
+
+    while (!isEmptyQueue(q)) {
+        int val = q->items[q->front];
+        dequeue(q);
+        if (val != data) {
+            enqueue(&temp, val);
+        }
+    }
+
+    *q = temp;
+}
+
+void displayQueue(Queue *q) {
+    printf("Queue: ");
+    for (int i = q->front; i <= q->rear; i++) {
+        printf("%d ", q->items[i]);
+    }
+    printf("\n");
+}
+
 #endif
