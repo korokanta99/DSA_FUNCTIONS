@@ -20,7 +20,7 @@ int isEmptyQueue(Queue *q){
 }
 
 int isFullQueue(Queue *q){
-    return (q->rear - q->front + 1 == MAX);
+    return ((q->rear - q->front + 1 + MAX) % MAX == MAX - 1);
 }
 
 void enqueue(Queue *q, int data){
@@ -42,31 +42,47 @@ void dequeue(Queue *q){
 
 void enqueueUnique(Queue *q, int data){
     int i = q->front;
-    while(i != (q->rear+1)%MAX){
-        if(q->items[i]==data){
-            printf("%d already exists.\n", data);
-            return;
+    if(!isEmptyQueue(q)){
+        while(i != (q->rear+1)%MAX){
+            if(q->items[i] == data){
+                printf("%d already exists.\n", data);
+                return;
+            }
+            i = (i+1)%MAX;
         }
-        i = (i+1)%MAX;
     }
     enqueue(q, data);
 }
 
 void dequeueUnique(Queue *q, int data){
     Queue temp; initQueue(&temp);
-    while(!isEmptyQueue(q)){
-        int val = q->items[q->front];
-        dequeue(q);
-        if(val != data) enqueue(&temp, val);
+    int i = q->front;
+
+    if(!isEmptyQueue(q)){
+        while(i != (q->rear+1)%MAX){
+            int val = q->items[i];
+            if(val != data){
+                enqueue(&temp, val);
+            }
+            i = (i+1)%MAX;
+        }
     }
     *q = temp;
 }
 
 void displayQueue(Queue *q){
+    if(isEmptyQueue(q)){
+        printf("Queue is empty.\n");
+        return;
+    }
+
     printf("Queue: ");
-    for(int i=q->front; i<=q->rear; i++){
+    int i = q->front;
+    while(i != (q->rear+1)%MAX){
         printf("%d ", q->items[i]);
+        i = (i+1)%MAX;
     }
     printf("\n");
 }
+
 #endif
