@@ -2,63 +2,67 @@
 #define STACK_A
 
 #include <stdio.h>
-#define MAX 100
+#include <stdbool.h>
+#define MAX 5
+
 
 typedef struct {
-    int top;
     int items[MAX];
+    int top;
 } Stack;
 
-void initStack(Stack *s){
+void initStack(Stack *s) {
     s->top = -1;
 }
 
-int isEmptyStack(Stack *s){
-    return (s->top == -1);
+bool isFull(Stack *s) {
+    return s->top == MAX - 1;
 }
 
-int isFullStack(Stack *s){
-    return (s->top == MAX - 1);
+bool isEmpty(Stack *s) {
+    return s->top == -1;
 }
 
-void push(Stack *s, int data){
-    if(!isFullStack(s)){
-        s->items[++(s->top)] = data;
+void push(Stack *s, int value) {
+    if (!isFull(s)) {
+        s->items[++s->top] = value;
     }
 }
 
-void pop(Stack *s){
-    if(!isEmptyStack(s)){
-        s->top--;
+int pop(Stack *s) {
+    if (!isEmpty(s)) {
+        return s->items[s->top--];
     }
+    return -1;
 }
 
-int peek(Stack *s){
-    return s->items[s->top];
+int peek(Stack *s) {
+    if (!isEmpty(s)) {
+        return s->items[s->top];
+    }
+    return -1;
 }
 
-void pushUnique(Stack *s, int data){
-    for(int i=0; i<=s->top; i++){
-        if(s->items[i]==data){
-            printf("%d already exists.\n", data);
-            return;
-        }
+int top(Stack *s) {
+    return s->top;
+}
+
+void display(Stack *s) {
+    printf("[ ");
+    for (int i = 0; i <= s->top; i++) {
+        printf("%d ", s->items[i]);
     }
-    if(!isFullStack(s)){
-        s->items[++(s->top)] = data;
-    } else {
-        printf("Stack full.\n");
-    }
+    printf("]\n");
 }
 
 void popUnique(Stack *s, int data){
     Stack temp; initStack(&temp);
-    while(!isEmptyStack(s)){
+    while(!isEmpty(s)){
         int val = peek(s);
         pop(s);
         if(val != data) push(&temp, val);
     }
-    while(!isEmptyStack(&temp)){
+    while(!isEmpty(&temp)){
         int val = peek(&temp);
         pop(&temp);
         push(s, val);

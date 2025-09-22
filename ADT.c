@@ -1,139 +1,110 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define MAX 10
 
-typedef struct{
+typedef struct {
     int elem[MAX];
     int count;
-}List;
+} List;
 
-List initialize(List);
-List insertPos(List, int, int);
-List deletePos(List , int);
-int locate(List, int);
-List insertSorted(List, int);
-void display(List);
+List initialize(List L);
+List insertPos(List L, int data, int position);
+List deletePos(List L, int position);
+int locate(List L, int data);
+List insertSorted(List L, int data);
+void display(List L);
 
 int main() {
+    List L = initialize(L);
 
-    List L;
-    L.count = 0;
-    
-    // L = initialize(L);
+    for(int i = 0; i < 7; i++){
+        L.elem[i] = i * i;
+        L.count++;
+    }
 
-    for(int i = 0; i < 7;i++){
-            L.elem[i] = i * i;
-            L.count++;
-        }
-        
-        printf("Populated\n");
-        display(L);
-    
-        printf("\n");
-        L = insertPos(L, 9,2);
-        printf("\n\ninsertPos\n");
-        display(L);
-     
-        printf("\n");
-        L = deletePos(L, 2);
-        printf("\n\ndeletePos\n");
-     
-        display(L);
-        int hi = locate(L, 25);
-        printf("\n\nLocate: %d", hi);
-        
+    printf("Populated\n");
+    display(L);
 
-        
-        printf("\n\ninsertSorted\n");
-        L = insertSorted(L,32);
-        display(L);
-        
+    L = insertPos(L, 9, 2);
+    printf("\ninsertPos\n");
+    display(L);
+
+    L = deletePos(L, 2);
+    printf("\ndeletePos\n");
+    display(L);
+
+    int pos = locate(L, 25);
+    printf("\nlocate(25): %d\n", pos);
+
+    printf("\ninsertSorted(32)\n");
+    L = insertSorted(L, 32);
+    display(L);
+
     return 0;
 }
 
-List intialize(List L){
+List initialize(List L) {
     L.count = 0;
     return L;
 }
 
-List insertPos(List L, int data, int position){
-    
-    List temp;
-    temp = L;
-    int i;
-    
-    
-    if(temp.count == MAX){
-        printf("Array is full");
-        return temp;
+List insertPos(List L, int data, int position) {
+    if (L.count == MAX) {
+        printf("Array is full\n");
+        return L;
     }
 
+    if (position < 0 || position > L.count)
+        position = L.count;  
 
-    for(i = temp.count;i > position;i--){
-
-            temp.elem[i] = temp.elem[i-1];
-        
+    for (int i = L.count; i > position; i--) {
+        L.elem[i] = L.elem[i - 1];
     }
-    temp.elem[position] = data;
-    temp.count++;
-    return temp;
+
+    L.elem[position] = data;
+    L.count++;
+    return L;
 }
 
-List deletePos(List L, int position){
-    
-    List temp; 
-    temp = L;
-    int i;
-   
-    
-    for(i = 0; i < temp.count;i++){
-        if(i >= position){
-            temp.elem[i] = temp.elem[i+1];
-        }
+List deletePos(List L, int position) {
+    if (position < 0 || position >= L.count) {
+        printf("Invalid position\n");
+        return L;
     }
-    temp.count--;
-    
-    return temp;
-    
+
+    for (int i = position; i < L.count - 1; i++) {
+        L.elem[i] = L.elem[i + 1];
+    }
+
+    L.count--;
+    return L;
 }
 
-int locate(List L, int data){
-    int i;
-    unsigned int returner = -1;
-    for(i = 0; i < L.count;i++){
-        if(data == L.elem[i]){
-            returner = i;
-        }
+int locate(List L, int data) {
+    for (int i = 0; i < L.count; i++) {
+        if (L.elem[i] == data)
+            return i; 
     }
-    
-    return returner;
+    return -1; 
 }
 
-List insertSorted(List L, int data){
-    List temp;
-    temp = L;
-    int i;
-    int position;
-    
-    for(i = 0;i < temp.count;i++){
-        if(temp.elem[i] < data && temp.elem[i+1] >= data){
-           position = i;
-            break;
-             
-        }
+List insertSorted(List L, int data) {
+    if (L.count == MAX) {
+        printf("Array is full\n");
+        return L;
     }
-    
 
-    temp = insertPos(temp,data, position + 1);
-    return temp;
+    int pos = 0;
+    while (pos < L.count && L.elem[pos] < data)
+        pos++;
+
+    return insertPos(L, data, pos);
 }
 
-void display(List L){
-    int i;
-    for(i = 0; i < L.count;i++){
+void display(List L) {
+    for (int i = 0; i < L.count; i++) {
         printf("%d ", L.elem[i]);
     }
-    printf("\nCount:%d" , L.count);
+    printf("\nCount: %d\n", L.count);
 }
